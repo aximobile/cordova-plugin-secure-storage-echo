@@ -102,6 +102,7 @@ public class SecureStorage extends CordovaPlugin {
             SERVICE_STORAGE.put(service, PREFS);
             if (!isDeviceSecure()) {
                 Log.e(TAG, MSG_DEVICE_NOT_SECURE);
+                rsa.deleteKey(alias);
                 callbackContext.error(MSG_DEVICE_NOT_SECURE);
             } else if (!rsa.encryptionKeysAvailable(alias)) {
                 // Encryption Keys aren't available, proceed to generate them
@@ -273,12 +274,9 @@ public class SecureStorage extends CordovaPlugin {
                     generateKeysContextRunning = true;
                     try {
                         String alias = service2alias(INIT_SERVICE);
-                        SharedPreferencesHandler storage = getStorage(INIT_SERVICE);
-                        if (storage.isEmpty()) {
-                            //Solves Issue #96. The RSA key may have been deleted by changing the lock type.
-                            getStorage(INIT_SERVICE).clear();
-                            rsa.createKeyPair(getContext(), alias, userAuthenticationValidityDuration);
-                        }
+                        //Solves Issue #96. The RSA key may have been deleted by changing the lock type.
+                        getStorage(INIT_SERVICE).clear();
+                        rsa.createKeyPair(getContext(), alias, userAuthenticationValidityDuration);
                         generateKeysContext.success();
                     } catch (Exception e) {
                         Log.e(TAG, MSG_KEYS_FAILED, e);

@@ -3,6 +3,7 @@ package com.crypho.plugins;
 import android.content.Context;
 import android.os.Build;
 import android.security.keystore.KeyProperties;
+import android.util.Log;
 
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -102,10 +103,21 @@ public abstract class AbstractRSA {
             decrypt(encrypted, alias);
             return false;
         } catch (InvalidKeyException noAuthEx) {
+            deleteKey(alias);
             return true;
         } catch (Exception e) {
             // Other
             return false;
+        }
+    }
+
+    public void deleteKey(String alias) {
+        try {
+            KeyStore keyStore = KeyStore.getInstance(KEYSTORE_PROVIDER);
+            keyStore.load(null, null);
+            keyStore.deleteEntry(alias);
+        } catch (Exception e) {
+            Log.e(TAG, "Exception deleting key", e);
         }
     }
 }
