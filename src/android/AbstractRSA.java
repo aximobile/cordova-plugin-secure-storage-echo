@@ -103,7 +103,6 @@ public abstract class AbstractRSA {
             decrypt(encrypted, alias);
             return false;
         } catch (InvalidKeyException noAuthEx) {
-            deleteKey(alias);
             return true;
         } catch (Exception e) {
             // Other
