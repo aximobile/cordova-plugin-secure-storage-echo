@@ -297,7 +297,7 @@ public class SecureStorage extends CordovaPlugin {
         cordova.getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 try {
-                    Intent intent = new Intent(Settings.ACTION_SECURITY_SETTINGS);
+                    Intent intent = new Intent(DevicePolicyManager.ACTION_SET_NEW_PASSWORD);
                     startActivity(intent);
                 } catch (Exception e) {
                     Log.e(TAG, "Error opening Security settings to secure device : ", e);
